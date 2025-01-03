@@ -1,20 +1,29 @@
+use std::fs::File;
+use std::io::{self, Read};
+
 struct Token {
     token: String,
     context: String,
 }
 
-fn main() {
-    let code = "i32 idade = 30;";
-    let tokens = lexer(code);
+fn main() -> io::Result<()> {
+    //le o arquivo
+    let caminho = "code.ky";
+    let mut arquivo = File::open(caminho)?;
+    let mut conteudo = String::new();
+    arquivo.read_to_string(&mut conteudo)?;
+
+    let tokens = lexer(conteudo);
 
     for token in tokens{
         println!("{}: {}", token.context, token.token);
     }
+
+    Ok(())
 }
 
 
-
-fn lexer(code: &str) -> Vec<Token> {
+fn lexer(code: String) -> Vec<Token> {
 
     //Transform the str into a vector
     let mut code: Vec<char> = code.chars().collect();
